@@ -8,7 +8,14 @@
     
     <body>
         <div class="Home">
-            <center><h1>COVID-19 Across The World</h1><h3>April 21, 2020</h3></center>
+            <nav class="nav">
+               <a href="index.html" class="nav-item is-active" active-color="orange">Home</a>
+                <a href="about.html" class="nav-item" active-color="green">About</a>
+                <a href="visuals.html" class="nav-item" active-color="red">Visuals</a>
+                <span class="nav-indicator"></span>
+            </nav>
+
+            <center><h1 style="transform: translate(0,35px);">COVID-19 Across The World</h1><h3 style="transform: translate(-5px,35px);">April 21, 2020</h3></center>
             <h2><div class="moveselect" style="transform: translate(60px,200px);"><select id="type">
                 <option>Recovered</option>
                 <option>Deaths</option>
@@ -17,9 +24,32 @@
             <div class="button" style="transform: translate(70px,220px);"><button onclick="submit()">Submit</button></div>
             <div id='map' style='width:70%; height:500; left:20%'></div>
         </div>
+        
     </body>
     
     <script>
+const indicator = document.querySelector('.nav-indicator');
+const items = document.querySelectorAll('.nav-item');
+
+function handleIndicator(el) {
+    items.forEach(item => {
+        item.classList.remove('is-active');
+        item.removeAttribute('style');
+  });
+  
+    indicator.style.width = `${el.offsetWidth}px`;
+    indicator.style.left = `${el.offsetLeft}px`;
+    indicator.style.backgroundColor = el.getAttribute('active-color');
+
+    el.classList.add('is-active');
+    el.style.color = el.getAttribute('active-color');
+}
+
+
+items.forEach((item, index) => {
+    item.addEventListener('click', (e) => { handleIndicator(e.target)});
+    item.classList.contains('is-active') && handleIndicator(item);
+});
         // Set up the world map
         map = new L.Map('map');
         var cartocdn = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
