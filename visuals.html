@@ -17,6 +17,23 @@
             </nav>
             <center><h1 style="transform: translate(0,35px);">Visuals</h1></center>
             <canvas id="myCanvas" width="1000" height="480" class="canvas"></canvas>
+            <!-- The following code for the graph numbers were not done with a for loop because the x coordinates varied based on the number of digits in the labels. It would have taken more lines of code to use a looping algorithm in this way because it would require if statemnts to check the amount of digits in each label.-->
+            <h3 style="transform: translate(180px,550px)":>2000</h3>
+            <h3 style="transform: translate(180px,480px)":>4000</h3>
+            <h3 style="transform: translate(180px,410px)":>6000</h3>
+            <h3 style="transform: translate(180px,340px)":>8000</h3>
+            <h3 style="transform: translate(172px,270px)":>10000</h3>
+            <h3 style="transform: translate(172px,200px)":>12000</h3>
+            <h3 style="transform: translate(172px,130px)":>14000</h3>
+            <h3 style="transform: translate(172px,60px)":>16000</h3>
+            <h3 style="transform: translate(172px,-10px)":>18000</h3>
+            <h3 style="transform: translate(172px,-80px)":>20000</h3>
+            <h3 style="transform: translate(172px,-150px)":>22000</h3>
+            <h3 style="transform: translate(172px,-220px)":>24000</h3>
+            <h3 class="grlabel1">Covid-19 Deaths Up Until April 21, 2020</h3>
+            <h3 class="grlabel2">Countries</h3>
+            <center><h2 class = "graphtitle">Top 12 Countries With the Most Covid-19 Deaths in the World </h2></center>
+            
         </div>
         
     </body>
@@ -51,16 +68,20 @@
         function drawgraph(){
             var c = document.getElementById("myCanvas");
             var ctx = c.getContext("2d");
-            x=20
+            
+            x=40
             for (i=0;i<data.length;i++){
-                ctx.fillStyle = "#c82124"; //red
-                ctx.beginPath();
-                ctx.arc(x,data[i]["Recovered"]*2,5,0,Math.PI*2,true);
-                ctx.font = "15px Arial";
-                ctx.fillText(data[i]["Country_Region"], x-12, data[i]["Recovered"]*2 - 10);
-                ctx.closePath();
-                ctx.fill(); 
-                x=x+10
+                if(data[i]["Deaths"]>2000){
+                    
+                    ctx.fillStyle = "Black";
+                    ctx.beginPath();
+                    ctx.arc(x, 480 - data[i]["Deaths"]/60,8,0,Math.PI*2,true);
+                    ctx.font = "15px Arial";
+                    ctx.fillText(data[i]["Country_Region"], x-15, 480 - data[i]["Deaths"]/60 - 15);
+                    ctx.closePath();
+                    ctx.fill(); 
+                    x=x+75
+                }
             }
         }
         
