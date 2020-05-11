@@ -4,6 +4,7 @@
         <link rel='stylesheet' href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css'/>
         <link rel='stylesheet' href='dash.css'/>
         <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
+        <script src="dash.JSON"></script>
     </head>
     
     <body>
@@ -15,32 +16,55 @@
                 <span class="nav-indicator"></span>
             </nav>
             <center><h1 style="transform: translate(0,35px);">Visuals</h1></center>
+            <canvas id="myCanvas" width="1000" height="480" class="canvas"></canvas>
         </div>
         
     </body>
     
     <script>
-        const indicator = document.querySelector('.nav-indicator');
-const items = document.querySelectorAll('.nav-item');
+        function navanimate(){
+            const indicator = document.querySelector('.nav-indicator');
+            const items = document.querySelectorAll('.nav-item');
 
-function handleIndicator(el) {
-  items.forEach(item => {
-    item.classList.remove('is-active');
-    item.removeAttribute('style');
-  });
-  
-  indicator.style.width = `${el.offsetWidth}px`;
-  indicator.style.left = `${el.offsetLeft}px`;
-  indicator.style.backgroundColor = el.getAttribute('active-color');
+            function handleIndicator(el) {
+                items.forEach(item => {
+                    item.classList.remove('is-active');
+                    item.removeAttribute('style');
+              });
 
-  el.classList.add('is-active');
-  el.style.color = el.getAttribute('active-color');
-}
+                indicator.style.width = `${el.offsetWidth}px`;
+                indicator.style.left = `${el.offsetLeft}px`;
+                indicator.style.backgroundColor = el.getAttribute('active-color');
 
-items.forEach((item, index) => {
-  item.addEventListener('click', (e) => { handleIndicator(e.target)});
-  item.classList.contains('is-active') && handleIndicator(item);
-});
+                el.classList.add('is-active');
+                el.style.color = el.getAttribute('active-color');
+            }
+
+
+            items.forEach((item, index) => {
+                item.addEventListener('click', (e) => { handleIndicator(e.target)});
+                item.classList.contains('is-active') && handleIndicator(item);
+            }); 
+        }
+        navanimate();
+    
+        function drawgraph(){
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            x=20
+            for (i=0;i<data.length;i++){
+                ctx.fillStyle = "#c82124"; //red
+                ctx.beginPath();
+                ctx.arc(x,data[i]["Recovered"]*2,5,0,Math.PI*2,true);
+                ctx.font = "15px Arial";
+                ctx.fillText(data[i]["Country_Region"], x-12, data[i]["Recovered"]*2 - 10);
+                ctx.closePath();
+                ctx.fill(); 
+                x=x+10
+            }
+        }
+        
+        drawgraph();
         
     </script>
 </html>
