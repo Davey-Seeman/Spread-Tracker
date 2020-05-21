@@ -86,9 +86,6 @@ body{
 }
 
 
-
-
-
 /* Canvas on Visuals Page */
 
 .canvas{
@@ -119,3 +116,11 @@ body{
     top:730px;
     position: absolute;
 }
+
+/* Choropleth map styling */
+
+.choromap{
+    top:128;
+}
+
+
