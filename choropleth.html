@@ -1,0 +1,88 @@
+<html>
+
+    <head>
+        <link rel='stylesheet' href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css'/>
+        <link rel='stylesheet' href='dash.css'/>
+        <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
+        <script src="chloroplethmap/cloropleth.geojson"></script><!-- import wrangled geojson -->
+    </head>
+    
+    <body>
+        <div class="Home">
+            <nav class="nav">
+               <a href="index.html" class="nav-item" active-color="orange">Home</a>
+                <a href="choropleth.html" class="nav-item is-active" active-color="green">In Canada</a>
+                <a href="graph.html" class="nav-item" active-color="red">Graph</a>
+                <span class="nav-indicator"></span>
+            </nav>
+        <div class="choromap" id='map' style='width:100%; height:500'></div>
+        </div>
+    </body>
+    
+    <script>
+         function navanimate(){
+            const indicator = document.querySelector('.nav-indicator');
+            const items = document.querySelectorAll('.nav-item');
+
+            function handleIndicator(el) {
+                items.forEach(item => {
+                    item.classList.remove('is-active');
+                    item.removeAttribute('style');
+              });
+
+                indicator.style.width = `${el.offsetWidth}px`;
+                indicator.style.left = `${el.offsetLeft}px`;
+                indicator.style.backgroundColor = el.getAttribute('active-color');
+
+                el.classList.add('is-active');
+                el.style.color = el.getAttribute('active-color');
+            }
+
+
+            items.forEach((item, index) => {
+                item.addEventListener('click', (e) => { handleIndicator(e.target)});
+                item.classList.contains('is-active') && handleIndicator(item);
+            }); 
+        }
+        navanimate();
+        // GEOJSON COLOR RAMP
+        function getColor(d) {
+           if (d > 500) {
+              return '#DC143C'; 
+           } else if (d > 6) {
+              return '#FF8C00';
+           } else if (d > 0 && d < 7) {
+              return 'LightSalmon';
+           } else {
+              return '#FFE2D7' 
+           }
+        }
+        
+        // GEOJSON STYLE
+        function style(feature) {
+        return {
+                fillColor: getColor(feature.properties.deaths),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+        
+        // Set up the world map
+        map = new L.Map('map');
+        var cartocdn = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+        cartoAttrib = 'Carto geodatabase is good for this application';
+        carto = new L.TileLayer(cartocdn);
+        map.setView([65,-100],3); // CENTERED ON CANADA
+        map.addLayer(carto);
+        
+        // THIS IS THE GEOJSON CODE - CLOROPLETH map
+        L.geoJson(provs, {style: style, onEachFeature: function (feature, layer) {
+        layer.bindPopup('<center><h3 style="color:black; font-family:monospace;">Deaths:</h3><b><h1 style="color:red;">'+feature.properties.deaths+'</h1></b></center>');
+        }}).addTo(map);
+        
+    </script>
+
+</html>
