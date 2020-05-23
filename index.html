@@ -4,26 +4,36 @@
         <link rel='stylesheet' href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css'/>
         <link rel='stylesheet' href='dash.css'/>
         <script src='https://unpkg.com/leaflet@1.4.0/dist/leaflet.js'></script>
+        <script src="dash.JSON"></script>
     </head>
     
     <body>
         <div class="Home">
+            
             <nav class="nav">
                <a href="index.html" class="nav-item is-active" active-color="orange">Home</a>
                 <a href="choropleth.html" class="nav-item" active-color="green">In Canada</a>
                 <a href="graph.html" class="nav-item" active-color="red">Graph</a>
                 <span class="nav-indicator"></span>
             </nav>
-
-            <center><h1 style="transform: translate(0,35px);">COVID-19 Across The World</h1><h3 style="transform: translate(-5px,35px);">Data Retrieved April 21, 2020</h3></center>
-                <h3 style="position: absolute; top: 320; left: 50; border: 1px solid black; padding-bottom: 100px; padding-top: 10px; padding-left: 10px; padding-right: 10px;">Choose a Data Type:</h3>
-                <div class="moveselect" style="transform: translate(95px,205px);"><select id="type">
-                    <option>Recovered</option>
-                    <option>Deaths</option>
-                    <option>Confirmed</option>
-                </select></div>
-                <div style="transform: translate(110px,225px);"><button onclick="submit()">Submit</button></div>
+            
+            <center><h1 style="transform: translate(0,35px);">COVID-19 Across The World</h1><h3 style="transform: translate(-5px,35px);">Data Retrieved April 21, 2020 From Johns Hopkins University</h3></center>
+        
+            <h3 style="position: absolute; top: 320; left: 50; border: 1px solid black; padding-bottom: 100px; padding-top: 10px; padding-left: 10px; padding-right: 10px;">Choose a Data Type:</h3>
+            <div class="moveselect" style="transform: translate(95px,205px);"><select id="type">
+                <option>Recovered</option>
+                <option>Deaths</option>
+                <option>Confirmed</option>
+            </select></div>
+            <div style="transform: translate(110px,225px);"><button onclick="submit()">Submit</button></div>
             <div id='map' style='width:70%; height:500; left:20%'></div>
+            
+            
+            <center><div style="font-family: sans-serif; border: 1px solid black; padding-bottom:10px; padding-top: 10px; padding-left: 10px; padding-right: 10px; postion: absolute;"> 
+                <b><label style="font-family: monospace; font-size: 15px;">Search For a Country ,</label><p style="font-family: monospace; font-size: 13px;">(Note: Country Must Start With a Capital Letter)</p></b><input type="text" id="country" style="font-weight: 100; border-width:thin; border-bottom-color: #A9A9A9; background-color: lightgray;" autocomplete="off">
+                <button onclick="country()">Submit</button>
+            </div></center>
+            
         </div>
         
     </body>
@@ -55,15 +65,30 @@
             }); 
         }
         navanimate();
+         // Set up the world map
         
-            // Set up the world map
-            map = new L.Map('map');
-            var cartocdn = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
-            cartoAttrib = 'Carto geodatabase is good for this application';
-            carto = new L.TileLayer(cartocdn);
-            map.setView([51.5, 0.12],2); // centered on London lat, long
-            map.addLayer(carto);
-            var layergroup = L.layerGroup().addTo(map);
+        map = new L.Map('map');
+        var cartocdn = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+        cartoAttrib = 'Carto geodatabase is good for this application';
+        carto = new L.TileLayer(cartocdn);
+        map.setView([51.5, 0.12],2); // centered on London lat, long
+        map.addLayer(carto);
+        var layergroup = L.layerGroup().addTo(map);
+        var findcountry = L.layerGroup().addTo(map);
+        
+        
+        //Find country circles popup on map
+        function country(){
+            countryname = document.getElementById("country").value
+            
+            for (i = 0; i < data.length; i++) {
+                if(countryname==data[i]['Country_Region']){
+                    L.circle([data[i]['Lat'],data[i]['Long_']],{color:'black',fillColor:'black',fillOpacity:0.5,radius:300000}).addTo(findcountry)
+                    setTimeout(function clear(){findcountry.clearLayers();},1000)
+                }
+            }
+        }
+        
         
         // add circles
         
